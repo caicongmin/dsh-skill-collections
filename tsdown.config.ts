@@ -3,7 +3,9 @@ import { basename, dirname } from 'node:path'
 import { defineConfig, type UserConfig } from 'tsdown'
 import { transform } from 'lightningcss'
 
-const PLUGIN_ID = '@dsh-external/dsh-skill-collections'
+// The private Git package keeps its installed identity. The npm distribution
+// builds the same client with its public name into an isolated staging folder.
+const PLUGIN_ID = process.env.DSH_SKILL_PACKAGE_NAME || '@dsh-external/dsh-skill-collections'
 const CSS_VIRTUAL_PREFIX = '\0dsh-css:'
 const CSS_VIRTUAL_SUFFIX = '.mjs'
 const CLIENT_EXTERNALS = [
@@ -19,7 +21,7 @@ const CLIENT_EXTERNALS = [
 
 const clientBundle: UserConfig = {
   entry: { client: 'src/client/index.ts' },
-  outDir: 'lib',
+  outDir: process.env.DSH_SKILL_CLIENT_OUT_DIR || 'lib',
   format: 'cjs',
   platform: 'browser',
   dts: false,

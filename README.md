@@ -1,4 +1,4 @@
-# @dsh-external/dsh-skill-collections
+# DSH Skill Collections
 
 DSH Skill 收藏夹管理器。它把 Skill 内容、收藏夹定义与工作区绑定分开：
 
@@ -61,7 +61,21 @@ skills:
     - unity-performance
 ```
 
-## 独立 Git 安装与更新
+## npm / 预构建包安装（无需源码）
+
+公开 npm 包名为 **`dsh-skill-collections`**。发布成功后可直接安装：
+
+```bash
+dsh plugin --profile web add dsh-skill-collections
+```
+
+安装指定版本可使用 `dsh-skill-collections@0.1.0`；更新后重启 DSH。安装包包含 Host、浏览器构建产物和 loader patch，不需要 clone、TypeScript、源码依赖或安装时编译。
+
+尚未发布到 npm 时，可通过 `dsh plugin --profile web add <绝对路径的.tgz>` 安装预构建包。开发者在本目录运行 `npm run pack:npm` 生成公开包，再由已登录 npm 的 Windows 执行 `npm.cmd publish <包.tgz> --access public --registry=https://registry.npmjs.org/`；Linux 无需登录。完整步骤见仓库中的 [PUBLISHING.md](https://github.com/caicongmin/dsh-skill-collections/blob/main/PUBLISHING.md)。**打包成功不等于已发布。**
+
+Git 开发包保留旧名 `@dsh-external/dsh-skill-collections`，公开包使用无前缀名；两者不能同时装配。已有源码/热注入安装请先按发布说明安全切换，不要直接叠加安装。Skill 数据目录保持不变。
+
+## 独立 Git 安装与更新（开发模式）
 
 本插件只在 `git@github.com:caicongmin/dsh-skill-collections.git` 同步源码和已有 `lib/` 产物，不再存入统一迁移仓库的插件快照。首次迁移：
 
@@ -73,7 +87,7 @@ pnpm dsh plugin --profile web add "file:/path/to/dsh-skill-collections"
 
 后续在插件 checkout 中执行 `git pull --ff-only origin main`，再从目标机 DSH 重复上述 `file:` 安装命令并重启 DSH。不要覆盖未提交修改，不复制旧机器的依赖或 SDK 链接。Skill 库、收藏夹仍从统一备份的 `bundle/skills/` 恢复，与插件代码更新分开。
 
-每批实际插件修改同步递增 `package.json.version`，并更新 `CHANGELOG.md`；纯备份/同步不重复升版，不自动发布 tag 或 Release。当前版本为 **0.0.2**，旧版 `.tgz` 不代表当前 checkout。
+每批实际插件修改同步递增 `package.json.version`，并更新 `CHANGELOG.md`；公开包由此版本生成，不维护两份版本号。纯备份/同步不重复升版，不自动发布 tag 或 Release。当前版本为 **0.1.0**，旧版 `.tgz` 不代表当前 checkout。
 
 ## 构建、测试与注入
 
