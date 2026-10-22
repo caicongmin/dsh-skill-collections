@@ -1,6 +1,6 @@
 {
   "name": "@dsh-external/dsh-skill-collections",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "DSH Skill 收藏夹管理器：集中管理 Skill、收藏夹与工作区显式绑定，并同步到原生 .dsh/skills。",
   "private": true,
   "type": "module",
@@ -10,6 +10,8 @@
     "lib",
     "cordis.patch.yml",
     "README.md",
+    "README.en.md",
+    "docs/screenshots",
     "CHANGELOG.md"
   ],
   "license": "MIT",

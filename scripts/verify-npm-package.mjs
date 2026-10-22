@@ -21,7 +21,7 @@ try {
     assert.ok(file.startsWith('package/') && !file.split('/').includes('..'), `Invalid archive path: ${file}`)
     assert.doesNotMatch(file, /(?:^|\/)(?:node_modules|src|scripts|tests|\.git|\.env|\.npmrc)(?:\/|$)/)
   }
-  for (const file of ['package.json', 'cordis.patch.yml', 'lib/index.js', 'lib/client.js', 'lib/types/index.d.ts', 'lib/types/client/index.d.ts', 'LICENSE']) {
+  for (const file of ['package.json', 'cordis.patch.yml', 'lib/index.js', 'lib/client.js', 'lib/types/index.d.ts', 'lib/types/client/index.d.ts', 'README.md', 'README.en.md', 'docs/screenshots/skill-library.png', 'docs/screenshots/collections.png', 'docs/screenshots/quick-picker.png', 'LICENSE']) {
     assert.ok(files.includes(`package/${file}`), `Missing runtime file: ${file}`)
   }
   await run('tar', ['-xzf', archive, '-C', extracted])

@@ -23,9 +23,10 @@ for (const file of ['lib/index.js', 'lib/client.js', 'lib/types/index.d.ts', 'li
 const staging = await mkdtemp(join(tmpdir(), 'dsh-skill-npm-'))
 try {
   await cp(join(root, 'lib'), join(staging, 'lib'), { recursive: true })
-  for (const file of ['README.md', 'CHANGELOG.md', 'LICENSE']) {
+  for (const file of ['README.md', 'README.en.md', 'CHANGELOG.md', 'LICENSE']) {
     await cp(join(root, file), join(staging, file))
   }
+  await cp(join(root, 'docs/screenshots'), join(staging, 'docs/screenshots'), { recursive: true })
 
   const manifest = structuredClone(pkg)
   manifest.name = publicName
@@ -64,7 +65,7 @@ try {
   process.stdout.write(checked.stdout)
   const digest = createHash('sha256').update(await readFile(archive)).digest('hex')
   await writeFile(`${archive}.sha256`, `${digest}  ${result.filename}\n`)
-  console.log(`Ready for Windows npm publish: ${archive}`)
+  console.log(`Ready for npm publish: ${archive}`)
   console.log(`SHA256: ${digest}`)
   console.log('This command did not publish, tag, install, or change a DSH profile.')
 } finally {

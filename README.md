@@ -1,134 +1,155 @@
 # DSH Skill Collections
 
-DSH Skill 收藏夹管理器。它把 Skill 内容、收藏夹定义与工作区绑定分开：
+**简体中文** | [English](README.en.md)
 
-- **托管 Skill 库**：`$DSH_HOME/skill-collections/library`，不在 DSH 默认扫描根中，因此安装后不会自动污染所有项目。
-- **收藏夹**：`$DSH_HOME/skill-collections/collections/*.yml`，只保存 Skill 名称引用。
-- **工作区绑定**：`<workspace>/.dsh/skill-collections.yml`，由用户显式选择收藏夹或单个 Skill。
-- **原生挂载**：插件将所选 Skill 安全地链接到 `<workspace>/.dsh/skills`，继续复用 DSH 自带的 Skill 发现和热加载。
+为 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 提供 **Skill 库、收藏夹和工作区管理**，在对话输入框中快速选择当前会话可用的 Skill。
 
-插件不会检测 Unity、Python 或其他项目类型，也不会根据目录内容自动启用能力。
+把 Skill 集中收纳，按用途组织成可复用的收藏夹，再选择在哪些工作区启用。无需为每个项目重复复制同一份技能文件。
 
-## 功能
-
-- 设置页中的 **Skill 库 / 收藏夹 / 工作区** 三个视图。
-- 在设置页直接选择根目录包含 `SKILL.md` 的 Skill 文件夹，内容会上传到固定托管库；无需填写目标路径。
-- Agent 工具仍可用 `import_path` 从 Host 本机绝对路径导入目录型或平铺 Markdown Skill。
-- 将已经位于 `~/.dsh/skills` 的全局 Skill“收纳”进隔离托管库。
-- 托管 Skill 支持“设为全局 / 取消全局”：原件保留在托管库，全局目录只建立可审计链接；取消时不影响已有工作区绑定。
-- 工作区“当前会话可用 Skill”与快捷选择复用原生 `/` 菜单的 `skills/list`，按真实会话 cwd 和预设作用域列出全部可手动调用技能，不限于托管库。
-- 同一工作区可切换会话查看各自的目录；从输入框打开管理时优先使用当前会话，不默认跳到别的工作区。
-- 创建、编辑、删除收藏夹；一个 Skill 可以被多个收藏夹引用。
-- 对已注册工作区显式启用/停用收藏夹。
-- 对工作区单独启用 Skill，或禁用收藏夹中的某个 Skill。
-- 可用目录只读展示名称、描述、路径和“仅手动”策略；托管绑定诊断独立展示链接状态、缺失和冲突，不再冒充完整可用列表。
-- `skill_collection_list` 与 `skill_collection_manage` Agent 工具。
-- 管理清单只删除插件自己创建且仍指向原来源的链接；目标被用户替换时失败关闭，不覆盖也不递归删除。
-
-### 全局技能的安全边界
-
-- 全局链接归属保存在 `$DSH_HOME/skill-collections/global-links.manifest.json`，操作串行化以避免并发丢失记录。
-- “设为全局”拒绝覆盖已有同名文件、目录或链接（包括目录型与平铺 Markdown 同名冲突）。
-- “取消全局”只移除本插件登记且仍指向原来源的链接。外部全局原件保留原有“收纳”入口，不提供直接删除。
-- 删除托管 Skill 前须先取消全局，强制删除也不会绕过此保护。
-- 全局技能不参与工作区链接同步；工作区的“禁用覆盖”不能屏蔽全局技能。可用列表与快捷选择的同名优先级完全沿用原生会话目录，不由本插件另行排序覆盖。
-- 全局开关只管理 DSH 全局目录中的托管链接；可用目录同时展示原生解析出的未托管、本地、共享用户目录、内置、预设与其他 provider 的有效技能。展示不会赋予插件额外的删除或禁用权限。
-- 同名覆盖与用户调用策略由原生目录处理；仅模型可用但不可由用户调用的技能不伪装成可插入的 `/` 项。读取失败时明确报错，不退回不完整的托管列表。
-
-## 配置格式
-
-收藏夹：
-
-```yaml
-version: 1
-id: unity-development
-name: Unity 开发
-description: Unity 开发常用流程
-skills:
-  - unity-coding
-  - unity-debugging
-```
-
-工作区：
-
-```yaml
-version: 1
-collections:
-  - unity-development
-skills:
-  enabled: []
-  disabled:
-    - unity-performance
-```
-
-## npm / 预构建包安装（无需源码）
-
-公开 npm 包名为 **`dsh-skill-collections`**。发布成功后可直接安装：
+## 安装
 
 ```bash
 dsh plugin --profile web add dsh-skill-collections
 ```
 
-安装指定版本可使用 `dsh-skill-collections@0.1.0`；更新后重启 DSH。安装包包含 Host、浏览器构建产物和 loader patch，不需要 clone、TypeScript、源码依赖或安装时编译。
+安装或更新后重启 DSH。npm 包包含 Host 和浏览器端构建产物，不需要克隆源码或在安装时编译。
 
-尚未发布到 npm 时，可通过 `dsh plugin --profile web add <绝对路径的.tgz>` 安装预构建包。开发者在本目录运行 `npm run pack:npm` 生成公开包，再由已登录 npm 的 Windows 执行 `npm.cmd publish <包.tgz> --access public --registry=https://registry.npmjs.org/`；Linux 无需登录。完整步骤见仓库中的 [PUBLISHING.md](https://github.com/caicongmin/dsh-skill-collections/blob/main/PUBLISHING.md)。**打包成功不等于已发布。**
+**支持 Windows。** 使用预构建 npm 包无需 Bash 或 TypeScript；导入标准的 Skill 文件夹即可：
 
-Git 开发包保留旧名 `@dsh-external/dsh-skill-collections`，公开包使用无前缀名；两者不能同时装配。已有源码/热注入安装请先按发布说明安全切换，不要直接叠加安装。Skill 数据目录保持不变。
+```text
+code-review/
+├── SKILL.md
+└── references/       # 可选的参考资料
+```
 
-**npm 只是额外分发方式，不改变现有备份和迁移命令。迁移仍使用下方的 Git 源码 clone / pull + `file:` 安装，不切换到 npm 包名安装。**
+开发版包名为 `@dsh-external/dsh-skill-collections`，与 npm 版共享同一插件入口；已安装开发版时，请先移除旧安装，再安装 npm 版，避免重复加载。
 
-## 独立 Git 安装与更新（开发模式）
+## 功能
 
-本插件只在 `git@github.com:caicongmin/dsh-skill-collections.git` 同步源码和已有 `lib/` 产物，不再存入统一迁移仓库的插件快照。首次迁移：
+| 功能 | 说明 |
+| --- | --- |
+| Skill 库 | 从界面选择 Skill 文件夹导入，集中存储和管理 |
+| 收藏夹 | 将技能组合成「日常开发」「前端质量」等集合，同一 Skill 可属于多个收藏夹 |
+| 工作区绑定 | 为不同项目选择收藏夹或单独启用 Skill，支持工作区级排除 |
+| 会话可用目录 | 读取 DSH 原生会话目录，与 `/` 菜单使用相同来源，不限于托管库 |
+| 输入框快捷选择 | 搜索当前会话可用 Skill，将 `/skill-name` 插入消息草稿 |
+| 全局 Skill | 将托管 Skill 设为全局，或将已有全局 Skill 收纳到托管库 |
+| Agent 工具 | 通过 `skill_collection_list` 和 `skill_collection_manage` 查询和管理 |
+
+## 界面预览
+
+以下截图来自实际插件界面，使用示例 Skill 和收藏夹展示。
+
+### 设置：Skill 库
+
+在「设置 → Skill 收藏夹」中管理导入的技能，支持搜索、排序和全局设置。
+
+![设置界面中的 Skill 库](docs/screenshots/skill-library.png)
+
+### 设置：编辑收藏夹
+
+为收藏夹选择成员。收藏夹只保存 Skill 引用，不复制技能内容。
+
+![编辑收藏夹并选择 Skill](docs/screenshots/collections.png)
+
+### 使用：输入框快捷选择
+
+从输入框旁的闪电图标打开列表，搜索并选择当前会话可用的 Skill。
+
+<img src="docs/screenshots/quick-picker.png" alt="对话输入框的 Skill 快捷选择列表" width="420">
+
+## 快速上手
+
+1. **导入 Skill**：打开「设置 → Skill 收藏夹 → Skill 库」，选择根目录包含 `SKILL.md` 的文件夹。
+2. **组织收藏夹**：切换到「收藏夹」，新建一个集合并勾选所需技能。
+3. **绑定工作区**：在「工作区」视图选择项目，启用收藏夹或单个 Skill。
+4. **在对话中选择**：回到目标会话，点击输入框旁的 Skill 快捷选择图标，按名称或描述搜索。
+5. **补充要求并发送**：选择技能后，其 `/skill-name` 会插入草稿；继续输入任务要求，再发送消息。
+
+输入框旁另一个管理入口可直接打开当前工作区的 Skill 管理面板。
+
+## 工作方式
+
+插件将内容、组合和启用范围分开管理：
+
+| 内容 | 存储位置 |
+| --- | --- |
+| 托管 Skill 内容 | `$DSH_HOME/skill-collections/library` |
+| 收藏夹定义 | `$DSH_HOME/skill-collections/collections/*.yml` |
+| 工作区选择 | `<workspace>/.dsh/skill-collections.yml` |
+| 工作区原生挂载 | `<workspace>/.dsh/skills` |
+
+未设置 `DSH_HOME` 时，默认使用 `~/.dsh`。导入 Skill 只是收纳内容；由你选择绑定工作区，插件不会根据项目类型自动启用技能。
+
+### 可用目录与工作区绑定
+
+- **当前会话可用 Skill** 来自 DSH 原生 `skills/list`，跟随会话的工作目录和预设作用域，也可以包含本地、全局、内置和其他来源的技能。
+- **工作区绑定** 展示本插件管理的技能与链接状态，不把托管库当作完整的会话目录。
+- 同名优先级和用户调用策略沿用 DSH 原生规则；选择技能只修改草稿，不会自动发送或执行。
+
+### 全局 Skill
+
+「设为全局」会为托管内容建立全局链接；「取消全局」移除该链接，库中的原件继续保留。工作区级排除不影响全局技能。
+
+收藏夹和工作区绑定的移除不会删除 Skill 内容。插件只清理自己管理的链接，不覆盖已有的同名用户文件。
+
+## 配置示例
+
+通常可直接通过界面管理；对应的配置格式如下。
+
+收藏夹：
+
+```yaml
+version: 1
+id: daily-development
+name: 日常开发
+description: 代码审查、测试与文档编写
+skills:
+  - code-review
+  - write-tests
+  - docs-writing
+```
+
+工作区选择：
+
+```yaml
+version: 1
+collections:
+  - daily-development
+skills:
+  enabled: []
+  disabled:
+    - docs-writing
+```
+
+## 开发
 
 ```bash
-git clone git@github.com:caicongmin/dsh-skill-collections.git /path/to/dsh-skill-collections
-# 从目标机 DSH checkout 执行：
+git clone https://github.com/caicongmin/dsh-skill-collections.git
+cd dsh-skill-collections
+```
+
+在插件目录构建。`DSH_CHECKOUT` 指向提供 SDK 和构建依赖的 DSH 源码 checkout：
+
+```bash
+DSH_CHECKOUT=/path/to/deepseek-harness npm run build
+npm run build:client
+npm test
+npm run pack:npm
+```
+
+从 DSH checkout 安装本地开发包：
+
+```bash
 pnpm dsh plugin --profile web add "file:/path/to/dsh-skill-collections"
 ```
 
-后续在插件 checkout 中执行 `git pull --ff-only origin main`，再从目标机 DSH 重复上述 `file:` 安装命令并重启 DSH。不要覆盖未提交修改，不复制旧机器的依赖或 SDK 链接。Skill 库、收藏夹仍从统一备份的 `bundle/skills/` 恢复，与插件代码更新分开。
+`pack:npm` 在 `release/` 中生成并校验预构建包，统一处理包名、loader patch 和浏览器模块 ID。SDK 与 React 使用 DSH 提供的共享依赖，`yaml` 作为普通运行依赖安装。
 
-每批实际插件修改同步递增 `package.json.version`，并更新 `CHANGELOG.md`；公开包由此版本生成，不维护两份版本号。纯备份/同步不重复升版，不自动发布 tag 或 Release。当前版本为 **0.1.0**，旧版 `.tgz` 不代表当前 checkout。
+贡献者发布流程见 [PUBLISHING.md](PUBLISHING.md)，版本记录见 [CHANGELOG.md](CHANGELOG.md)。
 
-## 构建、测试与注入
+## 许可证与致谢
 
-```bash
-DSH_CHECKOUT=<checkout> bash scripts/build.sh
-npm run build:client
-npm test
-# 注入器环境内：dev_inject_plugin <本目录>
-```
+[MIT License](LICENSE)。
 
-Host 构建先用 TypeScript 生成声明和可测试模块，再将 Host 入口中的插件本地逻辑打成单个 ESM 文件。这样入口热重载会带上同一代核心逻辑，避免复用旧的传递依赖缓存；共享依赖仍保持 external。
-
-## 持久安装与冷启动
-
-本包必须声明：
-
-```json
-{
-  "dsh": {
-    "bundle": {
-      "patch": "./cordis.patch.yml"
-    }
-  }
-}
-```
-
-`dev_inject_plugin` 成功只代表当前进程可以动态加载，不代表 profile 重启可以加载。持久安装必须满足：
-
-1. `package.json` 存在 `dsh.bundle.patch`；
-2. patch 文件存在并插入本包 loader entry；
-3. profile `dependencies` 中有本包 link；
-4. profile `dsh.profile.bundles` 中本包只出现一次；
-5. super-injector registry 中不再保留本包，避免 injected 实例与 bundle 实例同时注册 route/tool；
-6. 使用全新进程完成冷启动验证。
-
-从热注入切换到持久安装时，先退出 injected 通道，再执行 `dev_install_package`。不要让同一个包同时存在于 `dev_injected_list` 和 profile bundles。
-
-本包的 `scripts/validate-manifest.mjs` 会在测试和构建前检查 bundle 声明，缺失时直接失败。
-
-## 设计来源
-
-管理界面和安全文件操作借鉴了 MIT 许可的 [`lcthe/dsh-skills-hub`](https://github.com/lcthe/dsh-skills-hub)；可逆作用域和路径防线参考了 [`fuxin123z/dsh-skill-manage`](https://github.com/fuxin123z/dsh-skill-manage)。本插件新增的核心是隔离 Skill 库、收藏夹引用、显式工作区绑定和可审计链接清单。
+界面和文件管理实现借鉴了 MIT 许可的 [lcthe/dsh-skills-hub](https://github.com/lcthe/dsh-skills-hub)；可逆作用域与路径处理参考了 [fuxin123z/dsh-skill-manage](https://github.com/fuxin123z/dsh-skill-manage)。本插件在此基础上实现隔离托管库、收藏夹引用、显式工作区绑定与原生会话目录集成。
