@@ -1,0 +1,3 @@
+- insert:
+    - id: dsh-skill-collections
+      name: '@dsh-external/dsh-skill-collections'
