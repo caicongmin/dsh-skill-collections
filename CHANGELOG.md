@@ -5,6 +5,7 @@
 - 增加无前缀 `dsh-skill-collections` 的 npm 预构建分发，支持仅在 Windows 登录、发布 `.tgz`；Linux 无需认证，不自动公开发布。
 - 新增 `pack:npm` 和产物校验，公开包的 loader patch、浏览器模块 ID 与包名一致；版本来自根 manifest，消费者安装不执行构建。
 - 保留旧 scoped Git 开发包和当前 Profile 安装，生成公开包时使用隔离目录，不覆盖正在使用的客户端产物；两个安装通道不可叠加。
+- npm 仅作为额外分发通道，备份与迁移继续使用原 Git 源码 clone / pull + `file:` 安装命令。
 - 将 `yaml` 从 peer 改为普通运行依赖，确保关闭自动安装 peers 的 DSH Profile 也能安装完整依赖。
 
 ## 0.0.2 — 2026-10-22

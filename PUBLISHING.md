@@ -2,6 +2,8 @@
 
 公开包名：`dsh-skill-collections`。Git 源码包仍叫 `@dsh-external/dsh-skill-collections`，保留现有开发安装；两个包使用相同 loader entry、路由和数据目录，不能同时安装。
 
+**本说明只用于额外的 npm 分发，不更改现有备份/迁移方式。迁移命令仍使用独立 Git 源码 clone / pull，再以原来的 `file:` 本地包安装，不改成 npm 包名安装。**
+
 ## 1. 开发机准备
 
 每批功能改动同步递增根 `package.json.version` 并更新 `CHANGELOG.md`，然后在插件目录执行：

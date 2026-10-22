@@ -75,6 +75,8 @@ dsh plugin --profile web add dsh-skill-collections
 
 Git 开发包保留旧名 `@dsh-external/dsh-skill-collections`，公开包使用无前缀名；两者不能同时装配。已有源码/热注入安装请先按发布说明安全切换，不要直接叠加安装。Skill 数据目录保持不变。
 
+**npm 只是额外分发方式，不改变现有备份和迁移命令。迁移仍使用下方的 Git 源码 clone / pull + `file:` 安装，不切换到 npm 包名安装。**
+
 ## 独立 Git 安装与更新（开发模式）
 
 本插件只在 `git@github.com:caicongmin/dsh-skill-collections.git` 同步源码和已有 `lib/` 产物，不再存入统一迁移仓库的插件快照。首次迁移：

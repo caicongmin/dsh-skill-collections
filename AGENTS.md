@@ -10,3 +10,4 @@
 - npm 公开包名为 `dsh-skill-collections`，由 `npm run pack:npm` 从根 manifest 生成同版本预构建包；根包仍保持 private 和旧 scoped 名，避免破坏现有源码安装。打包时必须同时切换 loader patch 和浏览器模块 ID，不得只改 package name。
 - `yaml` 是普通运行依赖，DSH SDK / React 保持共享 peers。公开包不带开发依赖、构建/安装脚本或本机链接。新增运行依赖须同步进入产物。
 - 发布由 Windows npm 登录完成，不把凭据传到 Linux/聊天；生成包不等于发布。不得自动切换现有 Profile，两种安装方式互斥。发布步骤见 `PUBLISHING.md`。
+- 迁移命令保持原样：仍用 Git 源码 clone / pull + `file:` 安装，npm 仅是额外分发通道，不能据此将迁移文档、清单或 Profile 模板改为 npm 安装。
