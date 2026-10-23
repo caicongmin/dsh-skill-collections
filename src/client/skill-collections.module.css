@@ -294,8 +294,8 @@
 .managementButton { color: var(--dsw-alias-label-secondary); }
 .managementButton:hover:not(:disabled) { color: var(--dsw-alias-label-primary); }
 .managementButton:disabled { cursor: not-allowed; opacity: .48; }
-.managementModal { width: min(960px, calc(100vw - 32px)); }
-.managementModalContent { max-height: calc(100vh - 120px); overflow-y: auto; }
+.managementModal { width: min(960px, 100%); height: 800px; max-height: 100%; }
+.managementModalContent { flex: 1; min-height: 0; overflow-y: auto; scrollbar-gutter: stable; }
 
 @media (max-width: 850px) {
   .workspaceColumns { grid-template-columns: 1fr; }

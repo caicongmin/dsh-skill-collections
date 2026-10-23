@@ -5,7 +5,6 @@ import { Button, Input, Modal } from '@deepseek-ai/dsh-client-ui-primitives'
 import { openPath, rpc } from './index.js'
 import type { CollectionInfo, SkillInfo, Snapshot } from './types.js'
 import { ConfirmationController, type ConfirmationOptions } from './confirmation.js'
-import { AvailableSkills } from './AvailableSkills.js'
 import css from './skill-collections.module.css'
 
 type Props = PropsRuntime<'settings.section'>
@@ -86,7 +85,7 @@ function SkillRow({
   )
 }
 
-export function SkillCollectionsPanel({ initialWorkspaceId, initialSessionId, initialTab = 'library', context }: Partial<Props> & { readonly initialWorkspaceId?: string; readonly initialSessionId?: string; readonly initialTab?: Tab; readonly context?: { workspaceId?: string } }): JSX.Element {
+export function SkillCollectionsPanel({ initialWorkspaceId, initialTab = 'library', context }: Partial<Props> & { readonly initialWorkspaceId?: string; readonly initialSessionId?: string; readonly initialTab?: Tab; readonly context?: { workspaceId?: string } }): JSX.Element {
   const requestedWorkspaceId = context?.workspaceId ?? initialWorkspaceId
   const requestedTab = context?.workspaceId === undefined ? initialTab : 'workspace'
   const [tab, setTab] = useState<Tab>(requestedTab)
@@ -427,13 +426,6 @@ export function SkillCollectionsPanel({ initialWorkspaceId, initialSessionId, in
 
           {!workspace && <div className={css.empty}>请选择已注册的工作区。</div>}
           {workspace && <>
-            <AvailableSkills
-              key={`${workspace.id}:${workspace.id === requestedWorkspaceId ? initialSessionId ?? '' : ''}`}
-              sessionIds={snapshot.workspaces.find(item => item.id === workspace.id)?.sessionIds ?? []}
-              preferredSessionId={workspace.id === requestedWorkspaceId ? initialSessionId : undefined}
-              query={workspaceSkillQuery}
-              refreshKey={snapshot}
-            />
             <div className={css.workspaceColumns}>
               <div><h3>启用收藏夹</h3><div className={css.toggleList}>
                 {snapshot.collections.filter(collection => normalizedWorkspaceQuery === ''
@@ -465,7 +457,7 @@ export function SkillCollectionsPanel({ initialWorkspaceId, initialSessionId, in
 
             <details className={css.bindingDiagnostics}>
             <summary>托管绑定与全局目录诊断（不是完整可用目录）</summary>
-            <div className={css.sectionHeaderSecondary}><div><h3>绑定诊断</h3><p>用于检查本插件的链接、全局目录及冲突；实际可用技能以上方原生会话目录为准。</p></div><span className={css.badge}>{filteredEffectiveSkills.length} / {workspace.effective.length}</span></div>
+            <div className={css.sectionHeaderSecondary}><div><h3>绑定诊断</h3><p>用于检查本插件的链接、全局目录及冲突；查看当前会话可用技能请使用输入框旁的 Skill 快捷选择。</p></div><span className={css.badge}>{filteredEffectiveSkills.length} / {workspace.effective.length}</span></div>
             <div className={css.listToolbar}><select className={css.filterSelect} value={workspaceStatusFilter} onChange={event => setWorkspaceStatusFilter(event.target.value as typeof workspaceStatusFilter)} aria-label="筛选托管绑定诊断状态">
               <option value="all">全部绑定状态</option><option value="linked">已链接 / 全局</option><option value="problem">异常项</option>
             </select></div>
