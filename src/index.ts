@@ -26,7 +26,7 @@ import {
 } from './core.js'
 
 export const name = 'dsh-skill-collections'
-export const inject = ['webServer', 'workspaceRegistry', 'tools', 'sessionSkillCatalog']
+export const inject = ['webServer', 'workspaceRegistry', 'tools', 'sessionSkillCatalog', 'connection']
 
 const API_BASE = '/dsh-skill-collections-api'
 const MAX_BODY_BYTES = 16 * 1024 * 1024
@@ -46,7 +46,7 @@ interface ToolExec {
 }
 
 function send(res: ServerResponse, status: number, body: unknown): void {
-  res.writeHead(status, { 'content-type': 'application/json; charset=utf-8' })
+  res.writeHead(status, { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' })
   res.end(JSON.stringify(body))
 }
 
@@ -328,10 +328,15 @@ function registerTools(ctx: Context, paths: Paths): void {
 
 export function apply(ctx: Context, config: Config = {}): void {
   const paths = resolvePaths(config.dshHome)
+  const connection = ctx.get('connection')
+  if (!connection) throw new Error('Skill collections requires Connection owner authentication')
   ctx.effect(() => ctx.webServer.register({
     kind: 'prefix',
     path: API_BASE,
     handler: async (req, res) => {
+      // File/skill management is owner-only. Reject before accepting a body or reading disk.
+      const rejection = ownerRejection(connection, req)
+      if (rejection !== undefined) return send(res, rejection, { ok: false, error: { message: 'Owner authentication required' } })
       if (req.method !== 'POST') return send(res, 405, { ok: false, error: { message: 'POST required' } })
       const body = await readBody(req)
       if (typeof body.__error === 'string') return send(res, 400, { ok: false, error: { message: body.__error } })
@@ -347,4 +352,10 @@ export function apply(ctx: Context, config: Config = {}): void {
   ctx.logger.info(`Skill collections ready: library=${paths.library}`)
 }
 
-export const _internals = { handleEndpoint, snapshot }
+function ownerRejection(connection: { admit(request: IncomingMessage): any }, req: IncomingMessage): 401 | 403 | undefined {
+  const admission = connection.admit(req)
+  if ('rejection' in admission) return admission.rejection
+  return admission.peer.principal.kind === 'owner' ? undefined : 403
+}
+
+export const _internals = { handleEndpoint, snapshot, ownerRejection }

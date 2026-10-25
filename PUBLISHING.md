@@ -11,11 +11,26 @@ npm run build
 npm run build:client
 npm test
 npm run pack:npm
+npm run verify:profile -- --checkout "$DSH_CHECKOUT" \
+  --archive ./dsh-external-dsh-skill-collections-<version>.tgz \
+  --archive ./release/dsh-skill-collections-<version>.tgz \
+  --evidence ./docs/evidence/profile-<version>.json
 ```
 
 The output is `release/dsh-skill-collections-<version>.tgz` and its `.sha256` checksum. The archive includes prebuilt Host/browser code, the loader patch, both READMEs, and screenshot assets. Consumers do not run a build.
 
 `pack:npm` checks the archive's runtime files, dependencies, loader entry, and browser module ID. It generates the public client in a temporary directory without replacing the local development client bundle.
+
+The source archive is produced separately by `npm pack --ignore-scripts`. Run
+that before the Profile check and substitute the actual version in its arguments.
+`verify:profile` uses isolated temporary HOME/DSH_HOME directories, official CLI
+installation/removal and the exported official Profile boot API in fresh child
+processes. Its evidence is source-only and must describe the exact final archives;
+do not rebuild those archives after recording their hashes. Consult
+[DSH STORE review notes](docs/store-review.md) and [security boundaries](SECURITY.md).
+Local checks do not grant marketplace supply-chain approval. Do not run app-level
+`web --help` against a user's Profile as a read-only probe: current DSH composes
+and writes its generated Profile entry even for that help path.
 
 ## Publish to npm
 

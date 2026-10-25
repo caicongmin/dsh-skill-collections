@@ -17,6 +17,12 @@ Keep Skill content in one managed location, group it without duplicating files, 
 
 `DSH_HOME` defaults to `~/.dsh` when not configured.
 
+Compatibility: Node.js `^22.19.0 || >=24.0.0`, DSH `>=0.2.1-rc.2 <0.3.0`.
+Read the [security and permission boundaries](SECURITY.md) before enabling file
+management. [DSH STORE review notes](docs/store-review.md) describe the fixed
+dependency locks, complete prebuilt distribution and disposable-Profile checks.
+Local verification does not constitute marketplace supply-chain approval.
+
 ## Features
 
 - **Skill library, collections, and workspace views** in Settings.

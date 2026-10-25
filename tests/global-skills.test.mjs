@@ -198,6 +198,7 @@ test('UI endpoint and agent actions share global behavior, including validation 
   await skill('sample')
   const tools = new Map()
   const ctx = {
+    get(name) { assert.equal(name, 'connection'); return { admit: () => ({ peer: { principal: { kind: 'owner' } } }) } },
     effect(setup) { return setup() },
     webServer: { register() { return () => {} } },
     workspaceRegistry: { list() { return [{ id: 'test', path: workspace, title: 'Test' }] } },

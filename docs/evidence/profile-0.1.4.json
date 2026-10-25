@@ -1,0 +1,122 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "node": "v24.18.0",
+  "platform": "linux",
+  "arch": "x64",
+  "dsh": "0.2.1-rc.2",
+  "startup": "official exported @deepseek-ai/dsh/profile-boot.runProfile in a fresh child",
+  "installation": "official dsh plugin CLI",
+  "lifecycleScripts": false,
+  "offline": false,
+  "variants": [
+    {
+      "package": "@dsh-external/dsh-skill-collections",
+      "version": "0.1.4",
+      "archiveSha256": "98f244f201827e75c8089d1c8fdc089a13dd8637f922c8150d723f7adcf3b8f6",
+      "engines": {
+        "node": "^22.19.0 || >=24.0.0",
+        "dsh": ">=0.2.1-rc.2 <0.3.0"
+      },
+      "install": {
+        "exitCode": 0,
+        "dependencySaved": true,
+        "bundleCount": 1,
+        "disabledOverride": false,
+        "engineStrict": true
+      },
+      "coldStart": {
+        "freshProcess": true,
+        "ephemeralPort": true,
+        "clientPresent": true,
+        "tools": [
+          "skill_collection_list",
+          "skill_collection_manage"
+        ],
+        "api": {
+          "anonymous": 401,
+          "untrusted": 403,
+          "owner": 200
+        },
+        "isolatedPaths": true,
+        "libraryCount": 0,
+        "globalSkillCount": 0
+      },
+      "coldStartShutdown": {
+        "code": 0,
+        "signal": null
+      },
+      "remove": {
+        "exitCode": 0,
+        "dependencyAbsent": true,
+        "bundleAbsent": true,
+        "userPatchUnchanged": true
+      },
+      "afterRemovalColdStart": {
+        "freshProcess": true,
+        "ephemeralPort": true,
+        "clientAbsent": true,
+        "toolsAbsent": true,
+        "apiStatus": 405
+      },
+      "afterRemovalShutdown": {
+        "code": 0,
+        "signal": null
+      }
+    },
+    {
+      "package": "dsh-skill-collections",
+      "version": "0.1.4",
+      "archiveSha256": "09fb5f9f378084a187dd091dba025b93981ce7a45c4920811932f0f69d992410",
+      "engines": {
+        "node": "^22.19.0 || >=24.0.0",
+        "dsh": ">=0.2.1-rc.2 <0.3.0"
+      },
+      "install": {
+        "exitCode": 0,
+        "dependencySaved": true,
+        "bundleCount": 1,
+        "disabledOverride": false,
+        "engineStrict": true
+      },
+      "coldStart": {
+        "freshProcess": true,
+        "ephemeralPort": true,
+        "clientPresent": true,
+        "tools": [
+          "skill_collection_list",
+          "skill_collection_manage"
+        ],
+        "api": {
+          "anonymous": 401,
+          "untrusted": 403,
+          "owner": 200
+        },
+        "isolatedPaths": true,
+        "libraryCount": 0,
+        "globalSkillCount": 0
+      },
+      "coldStartShutdown": {
+        "code": 0,
+        "signal": null
+      },
+      "remove": {
+        "exitCode": 0,
+        "dependencyAbsent": true,
+        "bundleAbsent": true,
+        "userPatchUnchanged": true
+      },
+      "afterRemovalColdStart": {
+        "freshProcess": true,
+        "ephemeralPort": true,
+        "clientAbsent": true,
+        "toolsAbsent": true,
+        "apiStatus": 405
+      },
+      "afterRemovalShutdown": {
+        "code": 0,
+        "signal": null
+      }
+    }
+  ]
+}

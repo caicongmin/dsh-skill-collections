@@ -14,6 +14,10 @@ dsh plugin --profile web add dsh-skill-collections
 
 安装或更新后重启 DSH。npm 包包含 Host 和浏览器端构建产物，不需要克隆源码或在安装时编译。
 
+兼容范围：Node.js `^22.19.0 || >=24.0.0`，DSH `>=0.2.1-rc.2 <0.3.0`。
+依赖与高权限文件操作边界见 [安全说明](SECURITY.md)；商城修复及隔离 Profile
+验证方法见 [DSH STORE 审核说明](docs/store-review.md)。本地验证通过不代表商城已批准。
+
 **支持 Windows。** 使用预构建 npm 包无需 Bash 或 TypeScript；导入标准的 Skill 文件夹即可：
 
 ```text

@@ -35,6 +35,7 @@ test('current-session catalog is separate from requested workspace binding diagn
   const queries = []
   const abort = new AbortController()
   const ctx = {
+    get(name) { assert.equal(name, 'connection'); return { admit: () => ({ peer: { principal: { kind: 'owner' } } }) } },
     effect(setup) { return setup() },
     webServer: { register() { return () => {} } },
     workspaceRegistry: { list() { return [{ id: 'workspace', path: workspace, title: 'Workspace', sessionIds: ['current-session', 'other-preset-session'] }] } },

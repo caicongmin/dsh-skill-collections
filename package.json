@@ -1,26 +1,41 @@
 {
   "name": "@dsh-external/dsh-skill-collections",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "DSH Skill 收藏夹管理器：集中管理 Skill、收藏夹与工作区显式绑定，并同步到原生 .dsh/skills。",
   "private": true,
   "type": "module",
   "main": "./lib/index.js",
   "types": "./lib/types/index.d.ts",
   "files": [
-    "lib",
+    "lib/index.js",
+    "lib/index.js.map",
+    "lib/client.js",
+    "lib/client.js.map",
+    "lib/types",
     "cordis.patch.yml",
     "README.md",
     "README.en.md",
     "docs/screenshots",
-    "CHANGELOG.md"
+    "CHANGELOG.md",
+    "LICENSE",
+    "SECURITY.md",
+    "docs/store-review.md"
   ],
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git@github.com:caicongmin/dsh-skill-collections.git"
+    "url": "git+https://github.com/caicongmin/dsh-skill-collections.git"
+  },
+  "homepage": "https://github.com/caicongmin/dsh-skill-collections#readme",
+  "bugs": {
+    "url": "https://github.com/caicongmin/dsh-skill-collections/issues"
+  },
+  "engines": {
+    "node": "^22.19.0 || >=24.0.0",
+    "dsh": ">=0.2.1-rc.2 <0.3.0"
   },
   "dependencies": {
-    "yaml": "^2.9.0"
+    "yaml": "2.9.0"
   },
   "peerDependencies": {
     "@deepseek-ai/cordis": ">=4.0.0-rc <5",
@@ -52,6 +67,7 @@
     "build:client": "node node_modules/tsdown/dist/run.mjs",
     "pack:npm": "node scripts/pack-npm.mjs",
     "verify:npm": "node scripts/verify-npm-package.mjs",
+    "verify:profile": "node scripts/verify-disposable-profile.mjs",
     "validate:manifest": "node scripts/validate-manifest.mjs",
     "test": "npm run validate:manifest && node tests/smoke.mjs && node --test tests/*.test.mjs"
   },

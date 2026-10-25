@@ -6,6 +6,7 @@ import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { promisify } from 'node:util'
 import { parse, stringify } from 'yaml'
+import { projectRuntimeLock, RUNTIME_FILES } from './distribution-validation.mjs'
 
 const run = promisify(execFile)
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
@@ -22,19 +23,29 @@ for (const file of ['lib/index.js', 'lib/client.js', 'lib/types/index.d.ts', 'li
 
 const staging = await mkdtemp(join(tmpdir(), 'dsh-skill-npm-'))
 try {
-  await cp(join(root, 'lib'), join(staging, 'lib'), { recursive: true })
-  for (const file of ['README.md', 'README.en.md', 'CHANGELOG.md', 'LICENSE']) {
-    await cp(join(root, file), join(staging, file))
+  // Copy only the manifest's literal distribution allowlist. tsc intermediates
+  // remain in Git/lib for development, but never enter either distributable.
+  for (const file of [...pkg.files, 'LICENSE']) {
+    if (file === 'package-lock.json') continue
+    if (file === 'lib' || /[*?\[\]{}]/.test(file) || file.split(/[\\/]/).includes('..') || /^(?:\/|[A-Za-z]:)/.test(file)) {
+      throw new Error(`Expected a literal distribution path, not ${file}`)
+    }
+    const target = join(staging, file)
+    await mkdir(dirname(target), { recursive: true })
+    await cp(join(root, file), target, { recursive: true })
   }
-  await cp(join(root, 'docs/screenshots'), join(staging, 'docs/screenshots'), { recursive: true })
+  for (const file of RUNTIME_FILES) if (!pkg.files.includes(file)) throw new Error(`Missing runtime allowlist entry: ${file}`)
 
   const manifest = structuredClone(pkg)
   manifest.name = publicName
   delete manifest.private
   delete manifest.scripts
   delete manifest.devDependencies
+  manifest.files = [...manifest.files.filter(file => file !== 'package-lock.json'), 'npm-shrinkwrap.json']
   manifest.publishConfig = { access: 'public', registry: 'https://registry.npmjs.org/' }
   await writeFile(join(staging, 'package.json'), `${JSON.stringify(manifest, null, 2)}\n`)
+  const lock = projectRuntimeLock(JSON.parse(await readFile(join(root, 'package-lock.json'), 'utf8')), manifest)
+  await writeFile(join(staging, 'npm-shrinkwrap.json'), `${JSON.stringify(lock, null, 2)}\n`)
 
   const patch = parse(await readFile(join(root, 'cordis.patch.yml'), 'utf8'))
   const entries = patch.flatMap(operation => operation.insert ?? [])
