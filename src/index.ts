@@ -352,7 +352,14 @@ export function apply(ctx: Context, config: Config = {}): void {
   ctx.logger.info(`Skill collections ready: library=${paths.library}`)
 }
 
-function ownerRejection(connection: { admit(request: IncomingMessage): any }, req: IncomingMessage): 401 | 403 | undefined {
+function ownerRejection(connection: {
+  requestRejection(request: IncomingMessage): 401 | 403 | undefined
+  admit(request: IncomingMessage): { rejection: 401 | 403 } | { peer: { principal: { kind: string } } }
+}, req: IncomingMessage): 401 | 403 | undefined {
+  // First enforce the official request trust/authentication gate, then inspect
+  // the admitted principal. Authentication alone does not grant owner access.
+  const rejection = connection.requestRejection(req)
+  if (rejection !== undefined) return rejection
   const admission = connection.admit(req)
   if ('rejection' in admission) return admission.rejection
   return admission.peer.principal.kind === 'owner' ? undefined : 403

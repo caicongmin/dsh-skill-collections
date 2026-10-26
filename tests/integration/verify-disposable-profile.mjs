@@ -15,7 +15,7 @@ const { values } = parseArgs({ options: {
   help: { type: 'boolean', default: false },
 } })
 if (values.help) {
-  console.log('node scripts/verify-disposable-profile.mjs --checkout <DSH checkout> --archive <tgz> [--archive <tgz>] [--evidence <new JSON file>] [--offline]')
+  console.log('node tests/integration/verify-disposable-profile.mjs --checkout <DSH checkout> --archive <tgz> [--archive <tgz>] [--evidence <new JSON file>] [--offline]')
   process.exit(0)
 }
 assert.ok(values.checkout && values.archive?.length, '--checkout and at least one --archive are required')
@@ -120,7 +120,7 @@ async function command(args, env, cwd) {
       timer = setTimeout(() => reject(new Error('CLI operation exceeded 120 seconds')), 120_000)
     })])
     assert.equal(result.code, 0, `Official CLI failed: ${run.output()}`)
-    return result
+    return { ...result, output: run.output() }
   } finally { clearTimeout(timer); if (children.has(run.child)) await stop(run) }
 }
 
@@ -222,6 +222,9 @@ try {
     const savedPatch = await readFile(join(profileDir, 'cordis.patch.yml'), 'utf8')
     assert.deepEqual(parseYaml(savedPatch), [], 'A fresh official installation must not create disabled overrides')
     entry.install = { exitCode: 0, dependencySaved: true, bundleCount: 1, disabledOverride: false, engineStrict: true }
+    const config = await command(['--profile', 'web', '--dump-config'], env, cwd)
+    assert.ok(config.output.includes(manifest.name), 'Composed configuration must contain the installed package')
+    entry.dumpConfig = { exitCode: 0, packagePresent: true }
     const server = await boot(env, cwd)
     try { entry.coldStart = await inspectServer(server, manifest.name, true, env) }
     finally { entry.coldStartShutdown = await stop(server.run); assert.equal(entry.coldStartShutdown.code, 0) }

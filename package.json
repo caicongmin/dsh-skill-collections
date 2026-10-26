@@ -1,6 +1,6 @@
 {
   "name": "@dsh-external/dsh-skill-collections",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "DSH Skill 收藏夹管理器：集中管理 Skill、收藏夹与工作区显式绑定，并同步到原生 .dsh/skills。",
   "private": true,
   "type": "module",
@@ -67,7 +67,7 @@
     "build:client": "node node_modules/tsdown/dist/run.mjs",
     "pack:npm": "node scripts/pack-npm.mjs",
     "verify:npm": "node scripts/verify-npm-package.mjs",
-    "verify:profile": "node scripts/verify-disposable-profile.mjs",
+    "verify:profile": "node tests/integration/verify-disposable-profile.mjs",
     "validate:manifest": "node scripts/validate-manifest.mjs",
     "test": "npm run validate:manifest && node tests/smoke.mjs && node --test tests/*.test.mjs"
   },

@@ -1,0 +1,415 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-26T06:22:49.312Z",
+  "checker": {
+    "repository": "https://github.com/AI-Scarlett/build-dsh-plugin",
+    "commit": "153ac8c77a492c7a69f280325b68f35004b79640",
+    "script": "build-dsh-plugin/scripts/audit-plugin.mjs",
+    "unmodified": true
+  },
+  "target": {
+    "version": "0.1.5",
+    "state": "unreleased working tree",
+    "publishedBaselineVersion": "0.1.4",
+    "publishedBaselineCommit": "155b4c87b9dd0d6b6b99317dda4e8950e0ee2092"
+  },
+  "redactions": [
+    "report.root replaced with <plugin-root>; all other report fields are original checker output"
+  ],
+  "evidenceInput": {
+    "dumpConfig": {
+      "verified": true,
+      "evidence": "docs/evidence/profile-0.1.5.json: both final archives passed official isolated --dump-config; packagePresent=true."
+    },
+    "isolatedRuntime": {
+      "verified": true,
+      "evidence": "docs/evidence/profile-0.1.5.json: linux/x64, Node v24.18.0, DSH 0.2.1-rc.2; both archives passed install, fresh cold start, HTTP401/403/200, removal and post-removal absence. Final public SHA256 106ba6e19da551287e915485a6bb97ca8c7e29c8cf06231837c4a8a3e1cfacd7."
+    },
+    "realProfile": {
+      "verified": false,
+      "evidence": "Not performed: no live user Profile was changed or installed."
+    },
+    "externalReadback": {
+      "verified": false,
+      "evidence": "Not performed: no external device or deployed runtime acceptance is claimed."
+    }
+  },
+  "report": {
+    "schemaVersion": 1,
+    "root": "<plugin-root>",
+    "package": {
+      "name": "@dsh-external/dsh-skill-collections",
+      "version": "0.1.5"
+    },
+    "lifecycle": {
+      "applicable": false,
+      "status": "not-applicable",
+      "blockers": []
+    },
+    "riskSignals": {
+      "profileMutation": false,
+      "hasWebRegistration": true,
+      "hasClient": true,
+      "lifecycleScripts": []
+    },
+    "entryIds": [
+      "dsh-skill-collections"
+    ],
+    "staticScore": 80,
+    "staticMax": 80,
+    "runtimeScore": 10,
+    "runtimeMax": 20,
+    "total": 90,
+    "status": "controlled-real-profile-acceptance-ready",
+    "blockers": [],
+    "categories": [
+      {
+        "name": "Host contract",
+        "max": 16,
+        "score": 16,
+        "checks": [
+          {
+            "label": "package.json parses",
+            "pass": true,
+            "points": 3,
+            "max": 3,
+            "detail": "valid package manifest at package.json"
+          },
+          {
+            "label": "standard dsh.bundle patch exists",
+            "pass": true,
+            "points": 5,
+            "max": 5,
+            "detail": "cordis.patch.yml"
+          },
+          {
+            "label": "runtime entry points exist",
+            "pass": true,
+            "points": 3,
+            "max": 3,
+            "detail": [
+              {
+                "entry": "lib/index.js",
+                "exists": true
+              },
+              {
+                "entry": "lib/types/index.d.ts",
+                "exists": true
+              },
+              {
+                "entry": "lib/types/client/index.d.ts",
+                "exists": true
+              },
+              {
+                "entry": "lib/client.js",
+                "exists": true
+              },
+              {
+                "entry": "package.json",
+                "exists": true
+              }
+            ]
+          },
+          {
+            "label": "optional webServer is delayed",
+            "pass": true,
+            "points": 2,
+            "max": 2,
+            "detail": "web route detected"
+          },
+          {
+            "label": "client/card presentation is separated and registered",
+            "pass": true,
+            "points": 3,
+            "max": 3,
+            "detail": {
+              "hasClient": true,
+              "clientHostImports": [],
+              "presenterUiImports": [],
+              "officialToolCardReplacement": []
+            }
+          }
+        ]
+      },
+      {
+        "name": "Non-destructive safety",
+        "max": 16,
+        "score": 16,
+        "checks": [
+          {
+            "label": "no Loader/Fiber mutation calls",
+            "pass": true,
+            "points": 4,
+            "max": 4,
+            "detail": []
+          },
+          {
+            "label": "no DSH core/official write targets",
+            "pass": true,
+            "points": 4,
+            "max": 4,
+            "detail": []
+          },
+          {
+            "label": "no official inventory shadow",
+            "pass": true,
+            "points": 3,
+            "max": 3,
+            "detail": "none"
+          },
+          {
+            "label": "no shell-string execution",
+            "pass": true,
+            "points": 2,
+            "max": 2,
+            "detail": []
+          },
+          {
+            "label": "no secret logging, Client Host imports, or invalid card effects",
+            "pass": true,
+            "points": 3,
+            "max": 3,
+            "detail": {
+              "secretLogs": [],
+              "clientHostImports": [],
+              "presenterSideEffects": [],
+              "unsupportedCardDiscriminants": [],
+              "fullArgsRawInput": []
+            }
+          }
+        ]
+      },
+      {
+        "name": "Mutation discipline",
+        "max": 16,
+        "score": 16,
+        "checks": [
+          {
+            "label": "no Profile lifecycle mutation detected",
+            "pass": true,
+            "points": 16,
+            "max": 16,
+            "detail": "read-only or plugin-owned state only"
+          }
+        ]
+      },
+      {
+        "name": "Packaging and source",
+        "max": 12,
+        "score": 12,
+        "checks": [
+          {
+            "label": "name and version declared",
+            "pass": true,
+            "points": 3,
+            "max": 3,
+            "detail": "@dsh-external/dsh-skill-collections@0.1.5"
+          },
+          {
+            "label": "files and entry contract declared",
+            "pass": true,
+            "points": 2,
+            "max": 2,
+            "detail": {
+              "files": [
+                "lib/index.js",
+                "lib/index.js.map",
+                "lib/client.js",
+                "lib/client.js.map",
+                "lib/types",
+                "cordis.patch.yml",
+                "README.md",
+                "README.en.md",
+                "docs/screenshots",
+                "CHANGELOG.md",
+                "LICENSE",
+                "SECURITY.md",
+                "docs/store-review.md"
+              ],
+              "entries": [
+                "lib/index.js",
+                "lib/types/index.d.ts",
+                "lib/types/client/index.d.ts",
+                "lib/client.js",
+                "package.json"
+              ],
+              "patchOnlyAdapter": false
+            }
+          },
+          {
+            "label": "build/install contract is satisfiable",
+            "pass": true,
+            "points": 2,
+            "max": 2,
+            "detail": {
+              "hasTypeScriptRuntime": true,
+              "lifecycleScripts": [],
+              "allEntriesExist": true,
+              "patchOnlyAdapter": false
+            }
+          },
+          {
+            "label": "repository and license declared",
+            "pass": true,
+            "points": 2,
+            "max": 2,
+            "detail": {
+              "hasRepo": true,
+              "hasLicense": true
+            }
+          },
+          {
+            "label": "immutable 40-character source present",
+            "pass": true,
+            "points": 3,
+            "max": 3,
+            "detail": "pinned source found"
+          }
+        ]
+      },
+      {
+        "name": "Tests",
+        "max": 12,
+        "score": 12,
+        "checks": [
+          {
+            "label": "test/check script declared",
+            "pass": true,
+            "points": 3,
+            "max": 3,
+            "detail": {
+              "build": "bash scripts/build.sh",
+              "build:host:bundle": "node node_modules/tsdown/dist/run.mjs --config tsdown.host.config.ts",
+              "typecheck": "tsc -p tsconfig.json --noEmit",
+              "build:client": "node node_modules/tsdown/dist/run.mjs",
+              "pack:npm": "node scripts/pack-npm.mjs",
+              "verify:npm": "node scripts/verify-npm-package.mjs",
+              "verify:profile": "node tests/integration/verify-disposable-profile.mjs",
+              "validate:manifest": "node scripts/validate-manifest.mjs",
+              "test": "npm run validate:manifest && node tests/smoke.mjs && node --test tests/*.test.mjs"
+            }
+          },
+          {
+            "label": "test files exist",
+            "pass": true,
+            "points": 3,
+            "max": 3,
+            "detail": "9 text test files"
+          },
+          {
+            "label": "tests avoid real ~/.dsh writes",
+            "pass": true,
+            "points": 3,
+            "max": 3,
+            "detail": []
+          },
+          {
+            "label": "safety/fault/card replay boundary tests present",
+            "pass": true,
+            "points": 3,
+            "max": 3,
+            "detail": {
+              "safetyTestMarkers": true,
+              "hasToolPresenters": false,
+              "usesPresentationMeta": false,
+              "cardTestCoverage": true
+            }
+          }
+        ]
+      },
+      {
+        "name": "Documentation and status",
+        "max": 8,
+        "score": 8,
+        "checks": [
+          {
+            "label": "README exists",
+            "pass": true,
+            "points": 2,
+            "max": 2,
+            "detail": "README found"
+          },
+          {
+            "label": "permissions/non-goals/boundaries documented",
+            "pass": true,
+            "points": 2,
+            "max": 2,
+            "detail": {
+              "hasBoundaryDocs": true,
+              "hasSecurityDoc": true
+            }
+          },
+          {
+            "label": "verified/partial/blocked/unverified are distinct",
+            "pass": true,
+            "points": 2,
+            "max": 2,
+            "detail": ""
+          },
+          {
+            "label": "verification and next gate documented",
+            "pass": true,
+            "points": 2,
+            "max": 2,
+            "detail": ""
+          }
+        ]
+      }
+    ],
+    "cardContract": {
+      "detected": false,
+      "discriminants": [],
+      "usesPresentationMeta": false,
+      "testCoverage": true,
+      "findings": {
+        "unsupportedCardDiscriminants": [],
+        "presenterUiImports": [],
+        "presenterSideEffects": [],
+        "officialToolCardReplacement": [],
+        "fullArgsRawInput": []
+      }
+    },
+    "runtimeEvidence": {
+      "name": "Runtime evidence",
+      "score": 10,
+      "max": 20,
+      "checks": [
+        {
+          "label": "dumpConfig",
+          "pass": true,
+          "points": 4,
+          "max": 4,
+          "detail": "docs/evidence/profile-0.1.5.json: both final archives passed official isolated --dump-config; packagePresent=true."
+        },
+        {
+          "label": "isolatedRuntime",
+          "pass": true,
+          "points": 6,
+          "max": 6,
+          "detail": "docs/evidence/profile-0.1.5.json: linux/x64, Node v24.18.0, DSH 0.2.1-rc.2; both archives passed install, fresh cold start, HTTP401/403/200, removal and post-removal absence. Final public SHA256 106ba6e19da551287e915485a6bb97ca8c7e29c8cf06231837c4a8a3e1cfacd7."
+        },
+        {
+          "label": "realProfile",
+          "pass": false,
+          "points": 0,
+          "max": 6,
+          "detail": "current traceable evidence not supplied"
+        },
+        {
+          "label": "externalReadback",
+          "pass": false,
+          "points": 0,
+          "max": 4,
+          "detail": "current traceable evidence not supplied"
+        }
+      ]
+    },
+    "note": "This is a read-only static/evidence audit. It does not prove DSH runtime, UI, device, public deployment, or rollback behavior."
+  },
+  "limits": [
+    "No real user Profile acceptance",
+    "No external-device/runtime-deployment acceptance",
+    "No independent marketplace permission or supply-chain approval",
+    "0.1.5 has not been committed, pushed or published"
+  ]
+}

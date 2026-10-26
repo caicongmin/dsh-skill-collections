@@ -10,7 +10,16 @@ declare function snapshot(ctx: Context, paths: Paths, workspaceId?: unknown): Pr
 declare function handleEndpoint(ctx: Context, paths: Paths, endpoint: string, body: Record<string, unknown>): Promise<unknown>;
 export declare function apply(ctx: Context, config?: Config): void;
 declare function ownerRejection(connection: {
-    admit(request: IncomingMessage): any;
+    requestRejection(request: IncomingMessage): 401 | 403 | undefined;
+    admit(request: IncomingMessage): {
+        rejection: 401 | 403;
+    } | {
+        peer: {
+            principal: {
+                kind: string;
+            };
+        };
+    };
 }, req: IncomingMessage): 401 | 403 | undefined;
 export declare const _internals: {
     handleEndpoint: typeof handleEndpoint;

@@ -1,5 +1,12 @@
 # 变更记录
 
+## 0.1.5 — 2026-10-26
+
+- 管理 HTTP 接口先调用官方 `Connection.requestRejection()` 拒绝不可信或未认证请求，再通过 `admit()` 检查 owner 主体，明确区分请求鉴权与 owner 授权；保持拒绝前不读取请求体和文件。
+- 补充官方鉴权门短路、调用顺序、非 owner 拒绝及后续 admission 拒绝的回归测试；不修改外部检查器规则。
+- 将一次性 Profile 集成验证归入 `tests/integration`，保持 `verify:profile` 命令不变，明确测试与生产代码边界，避免将测试中的安装／卸载误认成插件运行功能。
+- 补充已发布版本的固定源码与归档基线、当前版本验证方法及权限审查材料，区分源码审计、隔离验收和商城独立批准。
+
 ## 0.1.4 — 2026-10-24
 
 - 使用 canonical HTTPS GitHub repository，明确 Node.js 与 DSH 兼容范围。
